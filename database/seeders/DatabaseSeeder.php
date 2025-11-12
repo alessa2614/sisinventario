@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
             'email'=> 'shv72963@gmail.com',
             'password'=> Hash::make('12345678'),
             'nombres' => 'Alexandra',
-            'apellidos' => 'Hancco Vargas',
+            'apellidos' => 'Vargas',
             'tipo_documento' => 'DNI',
             'numero_documento' => '12345678',
             'celular' => '987654321',
