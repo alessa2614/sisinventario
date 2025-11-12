@@ -1,0 +1,39 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('movimientos', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('bien_id');
+            $table->foreign('bien_id')->references('id')->on('bienes')->onDelete('cascade');
+
+            $table->date('fecha'); 
+
+            $table->unsignedBigInteger('area_anterior');
+            $table->foreign('area_anterior')->references('id')->on('areas');
+
+            $table->unsignedBigInteger('area_nueva');
+            $table->foreign('area_nueva')->references('id')->on('areas');
+
+            $table->text('observaciones')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('movimientos');
+    }
+};

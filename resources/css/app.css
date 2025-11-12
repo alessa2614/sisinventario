@@ -1,0 +1,53 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
+/* Menú activo con inversión de colores */
+.nav-sidebar .nav-link.active.bg-blue {
+    background-color: #fff !important;
+    color: #007bff !important;
+    font-weight: bold;
+}
+
+.nav-sidebar .nav-link.active.bg-green {
+    background-color: #fff !important;
+    color: #28a745 !important;
+    font-weight: bold;
+}
+
+.nav-sidebar .nav-link.active.bg-red {
+    background-color: #fff !important;
+    color: #dc3545 !important;
+    font-weight: bold;
+}
+
+.nav-sidebar .nav-link.active.bg-yellow {
+    background-color: #212529 !important; /* Fondo oscuro para amarillo */
+    color: #ffc107 !important;
+    font-weight: bold;
+}
+
+.nav-sidebar .nav-link.active.bg-teal {
+    background-color: #fff !important;
+    color: #20c997 !important;
+    font-weight: bold;
+}
+
+.nav-sidebar .nav-link.active.bg-purple {
+    background-color: #fff !important;
+    color: #6f42c1 !important;
+    font-weight: bold;
+}
+/* Submenú activo con fondo blanco y texto azul */
+.nav-sidebar .nav-treeview .nav-link.active {
+    background-color: #ffffff !important; /* Fondo blanco */
+    color: #007bff !important; /* Texto azul */
+    font-weight: bold;
+}

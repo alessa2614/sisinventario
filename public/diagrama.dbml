@@ -1,0 +1,90 @@
+Table Usuarios {
+  id int [pk, increment]
+  name varchar(100)
+  email varchar(100) [unique]
+  password varchar(255)
+  remenber_token varchar(255)
+  nombres varchar(100)
+  tipo_documento varchar(50)
+  numero_documento varchar(50)
+  celular varchar
+  fecha_nacimiento date
+  genero varchar(20)
+  direccion text
+  foto varchar
+
+}
+
+Table Directores {
+  id int [pk, increment]
+  nombre varchar(100)
+  apellido varchar(100)
+  dni varchar(20)
+  fecha_inicio date
+  fecha_fin date
+  estado boolean   
+  observaciones text
+}
+
+Table Areas {
+  id int [pk, increment]
+  nombre varchar(100)
+  descripcion text
+}
+
+Table Estados {
+  id int [pk, increment]
+  nombre varchar(50) 
+  descripcion text
+}
+
+Table Categorias {
+  id int [pk, increment]
+  nombre varchar(100) [not null]
+  descripcion text
+  parent_id int [ref: > Categorias.id, note: 'Referencia a la categoría padre (para jerarquía)']
+}
+
+Table Bienes {
+  id int [pk, increment]
+  codigo_patrimonial varchar(50) [null] 
+  descripcion text
+  id_area int [ref: > Areas.id]
+  id_estado int [ref: > Estados.id]
+  fecha_adquisicion date
+  numero_doc varchar(50)   
+  tipo_documento varchar(100)
+  marca varchar(100)
+  modelo varchar(100)
+  serie varchar(100)
+  medidas varchar(100)
+  color varchar(50)
+  id_categoria int [ref: > Categorias.id]
+  valor_inicial decimal(10,2)
+  depreciacion decimal(10,2)
+  id_director int [ref: > Directores.id]   
+  observaciones text
+}
+
+Table Movimientos {
+  id int [pk, increment]
+  id_bien int [ref: > Bienes.id]
+  fecha datetime
+  area_anterior int [ref: > Areas.id]
+  area_nueva int [ref: > Areas.id]
+  observacion text
+}
+
+
+
+Table Bajas {
+  id int [pk, increment]
+  bien_id int [ref: > Bienes.id]            
+  fecha date                                
+  motivo text                               
+  director_id int [ref: > Directores.id]    
+  observaciones text  
+}
+
+
+
