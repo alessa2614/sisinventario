@@ -1,24 +1,39 @@
-# Imagen base de PHP con Composer y extensiones
-FROM php:8.2-apache
+# Usa la imagen oficial de PHP 8.3 con Apache
+FROM php:8.3-apache
 
-# Instala dependencias del sistema
+# Instala dependencias del sistema necesarias
 RUN apt-get update && apt-get install -y \
-    git zip unzip libpng-dev libonig-dev libxml2-dev curl && \
-    docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    libzip-dev \
+    zip \
+    unzip \
+    git \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install gd pdo_mysql zip exif pcntl bcmath
 
-# Copia los archivos del proyecto al contenedor
+# Habilita el módulo de reescritura de Apache
+RUN a2enmod rewrite
+
+# Copia todos los archivos del proyecto al contenedor
 WORKDIR /var/www/html
 COPY . .
 
-# Instala Composer
+# Copia Composer desde la imagen oficial
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-RUN composer install --no-dev --optimize-autoloader
+
+# Instala dependencias de Laravel
+RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs
 
 # Genera la clave de aplicación
 RUN php artisan key:generate
 
-# Expone el puerto 8080
-EXPOSE 8080
+# Cambia permisos para el almacenamiento y caché
+RUN chmod -R 775 storage bootstrap/cache
 
-# Comando para ejecutar Laravel en modo producción
-CMD php artisan serve --host=0.0.0.0 --port=8080
+# Expone el puerto 80
+EXPOSE 80
+
+# Comando por defecto
+CMD ["apache2-foreground"]
