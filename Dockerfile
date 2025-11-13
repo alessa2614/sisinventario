@@ -1,7 +1,7 @@
-# Imagen base de PHP con Apache
+# Etapa 1: Dependencias de PHP y Apache
 FROM php:8.3-apache
 
-# Instala extensiones necesarias para Laravel
+# Instala extensiones necesarias
 RUN apt-get update && apt-get install -y \
     git unzip libpng-dev libjpeg-dev libfreetype6-dev libzip-dev zip && \
     docker-php-ext-install pdo pdo_mysql gd zip && \
@@ -10,20 +10,24 @@ RUN apt-get update && apt-get install -y \
 # Establece el directorio de trabajo
 WORKDIR /var/www/html
 
-# Copia todos los archivos del proyecto
+# Copia el código del proyecto
 COPY . .
 
 # Instala Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Instala dependencias de Laravel
+# Instala las dependencias de Laravel
 RUN composer install --no-dev --optimize-autoloader
 
-# Da permisos a las carpetas de Laravel
+# Genera la APP_KEY si no existe
+RUN php artisan key:generate --force || true
+
+# Permisos necesarios
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Configura Apache para servir desde /public
 RUN echo '<VirtualHost *:80>\n\
+    ServerName localhost\n\
     DocumentRoot /var/www/html/public\n\
     <Directory /var/www/html/public>\n\
         AllowOverride All\n\
@@ -31,8 +35,8 @@ RUN echo '<VirtualHost *:80>\n\
     </Directory>\n\
 </VirtualHost>' > /etc/apache2/sites-available/000-default.conf
 
-# Expone el puerto 80
+# Expone el puerto
 EXPOSE 80
 
-# Comando de inicio
+# Inicia Apache
 CMD ["apache2-foreground"]
