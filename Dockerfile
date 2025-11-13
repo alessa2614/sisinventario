@@ -27,7 +27,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs
 
 # Genera la clave de aplicación
-RUN php artisan key:generate
+# RUN php artisan key:generate
 
 # Cambia permisos para el almacenamiento y caché
 RUN chmod -R 775 storage bootstrap/cache
