@@ -1,16 +1,18 @@
-# Usa una imagen oficial de PHP con Apache
-FROM php:8.3-apache
+# Usa la imagen oficial de PHP con Apache
+FROM php:8.2-apache
 
-# Instala extensiones requeridas para Laravel
+# Instala extensiones necesarias
 RUN apt-get update && apt-get install -y \
-    zip unzip git libpng-dev libjpeg-dev libfreetype6-dev libzip-dev \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    zip \
+    unzip \
+    libzip-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo_mysql gd zip
+    && docker-php-ext-install gd pdo pdo_mysql bcmath zip exif
 
-# Habilita mod_rewrite para Laravel
-RUN a2enmod rewrite
-
-# Copia los archivos del proyecto al contenedor
+# Copia los archivos del proyecto
 WORKDIR /var/www/html
 COPY . .
 
@@ -18,22 +20,14 @@ COPY . .
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN composer install --no-dev --optimize-autoloader
 
-# Genera la APP_KEY automáticamente (si no existe)
-RUN php artisan key:generate --force
+# Configura permisos para Laravel
+RUN chown -R www-data:www-data storage bootstrap/cache && chmod -R 775 storage bootstrap/cache
 
-# Cambia permisos para storage y bootstrap/cache
-RUN chmod -R 775 storage bootstrap/cache
+# Configura Apache
+RUN a2enmod rewrite
+COPY ./apache/laravel.conf /etc/apache2/sites-available/000-default.conf
 
-# Configura Apache para servir desde /public
-RUN echo "<VirtualHost *:80>\n\
-    DocumentRoot /var/www/html/public\n\
-    <Directory /var/www/html/public>\n\
-        AllowOverride All\n\
-        Require all granted\n\
-    </Directory>\n\
-</VirtualHost>" > /etc/apache2/sites-available/000-default.conf
-
-# Exponer el puerto
+# Expone el puerto 80
 EXPOSE 80
 
 # Inicia Apache
