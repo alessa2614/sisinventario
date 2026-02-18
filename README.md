@@ -66,16 +66,16 @@ El sistema sigue el patrón Modelo – Vista – Controlador (MVC) utilizando la
 
 ##  Capturas del Sistema
 ###  Login
-![Login](docs/images/login.png)
+![Login](docs/images/login.PNG)
 
 ###  Panel Principal
-![Dashboard](docs/images/dashboard.png)
+![Dashboard](docs/images/dashboard.PNG)
 
 ###  Gestión de Bienes
-![Bienes](docs/images/bienes.png)
+![Bienes](docs/images/bienes.PNG)
 
 ###  Movimientos
-![Movimientos](docs/images/movimientos.png)
+![Movimientos](docs/images/movimientos.PNG)
 
 ---
 
